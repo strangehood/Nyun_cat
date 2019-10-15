@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import Canvas
+import time as t
 
 root = Tk()
 
@@ -16,8 +16,11 @@ body_parts = ('head', 'ear1', 'ear2', 'eye1', 'eye2', 'mouth1', 'mouth2', 'nose'
 xs = 170
 ys = 190
 dx = 0.05
+djump = [-19, -17, -15, -13, -11, -9, -7, -5, -3, -1, 0, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
 step = 0
 flag_step = False
+flag_jump = 1
+flag_jrainbow = 1
 
 
 def cat_creation(xh, yh):
@@ -50,79 +53,131 @@ def rainbow():
     global color, rainbow_list
     for j in range(10):
         for i in range(6):
-            rainbow_list[j][i] = c.create_rectangle(22 * j, 240 + 10 * i, 22 + 22 * j, 250 + 10 * i,
+            rainbow_list[j][i] = c.create_rectangle(22 * j, 245 + 10 * i, 22 + 22 * j, 255 + 10 * i,
                                                     fill=color[i], outline=color[i])
 
 
+def head_moving(xh, yh):
+    c.move(cat[body_parts.index('head')], xh, yh)
+    c.move(cat[body_parts.index('eye1')], xh, yh)
+    c.move(cat[body_parts.index('eye2')], xh, yh)
+    c.move(cat[body_parts.index('ear1')], xh, yh)
+    c.move(cat[body_parts.index('ear2')], xh, yh)
+    c.move(cat[body_parts.index('mouth1')], xh, yh)
+    c.move(cat[body_parts.index('mouth2')], xh, yh)
+    c.move(cat[body_parts.index('nose')], xh, yh)
+
+
+def return_body_move(xh, yh):
+    def body_move():
+        xx = xh
+        yy = yh
+        c.move(cat[body_parts.index('body')], xx, yy)
+        head_moving(xx, yy)
+
+    return body_move
+
+
+def return_full_body_move(xh, yh):
+    def full_body_move():
+        xx = xh
+        yy = yh
+        c.move(cat[body_parts.index('leg1')], xx, yy)
+        c.move(cat[body_parts.index('leg2')], xx, yy)
+        c.move(cat[body_parts.index('body')], xx, yy)
+        head_moving(xh, yh)
+
+    return full_body_move
+
+
 def running_cat():
-    global xs, ys, dx, step, flag_step
+    global xs, ys, dx, step, flag_step, flag_jump
 
-    if (step < 0) and (step % 3 == 0):
-        for j in range(10):
-            if j % 2 == 0:
-                for i in range(6):
-                    c.move(rainbow_list[j][i], 0, 10 * dx)
+    if flag_jump == 1:
 
-                    # head moving
-                    c.move(cat[body_parts.index('head')], 0, dx)
-                    c.move(cat[body_parts.index('eye1')], 0, dx)
-                    c.move(cat[body_parts.index('eye2')], 0, dx)
-                    c.move(cat[body_parts.index('ear1')], 0, dx)
-                    c.move(cat[body_parts.index('ear2')], 0, dx)
-                    c.move(cat[body_parts.index('mouth1')], 0, dx)
-                    c.move(cat[body_parts.index('mouth2')], 0, dx)
-                    c.move(cat[body_parts.index('nose')], 0, dx)
+        if (step < 0) and (step % 3 == 0):
+            for j in range(10):
+                if j % 2 == 0:
+                    for i in range(6):
+                        c.move(rainbow_list[j][i], 0, 10 * dx)
 
-        for j in range(10):
-            if j % 2 == 1:
-                for i in range(6):
-                    c.move(rainbow_list[j][i], 0, -10 * dx)
+                        head_moving(0, dx)
 
-    if (step > 0) and (step % 3 == 0):
-        for j in range(10):
-            if j % 2 == 0:
-                for i in range(6):
-                    c.move(rainbow_list[j][i], 0, - 10 * dx)
+            for j in range(10):
+                if j % 2 == 1:
+                    for i in range(6):
+                        c.move(rainbow_list[j][i], 0, -10 * dx)
 
-                    # head moving
-                    c.move(cat[body_parts.index('head')], 0, -dx)
-                    c.move(cat[body_parts.index('eye1')], 0, -dx)
-                    c.move(cat[body_parts.index('eye2')], 0, -dx)
-                    c.move(cat[body_parts.index('ear1')], 0, -dx)
-                    c.move(cat[body_parts.index('ear2')], 0, -dx)
-                    c.move(cat[body_parts.index('mouth1')], 0, -dx)
-                    c.move(cat[body_parts.index('mouth2')], 0, -dx)
-                    c.move(cat[body_parts.index('nose')], 0, -dx)
+        if (step > 0) and (step % 3 == 0):
+            for j in range(10):
+                if j % 2 == 0:
+                    for i in range(6):
+                        c.move(rainbow_list[j][i], 0, - 10 * dx)
 
-        for j in range(10):
-            if j % 2 == 1:
-                for i in range(6):
-                    c.move(rainbow_list[j][i], 0, 10 * dx)
+                        head_moving(0, -dx)
 
-    if flag_step is False:
-        c.move(cat[body_parts.index('leg1')], -1, 0)
-        c.move(cat[body_parts.index('leg2')], 1, 0)
-    else:
-        c.move(cat[body_parts.index('leg1')], 1, 0)
-        c.move(cat[body_parts.index('leg2')], -1, 0)
+            for j in range(10):
+                if j % 2 == 1:
+                    for i in range(6):
+                        c.move(rainbow_list[j][i], 0, 10 * dx)
 
-    if step > 10:
-        flag_step = True
-    elif step < -10:
-        flag_step = False
-    if flag_step is False:
-        step += 1
-    else:
-        step -= 1
+        if flag_step is False:
+            c.move(cat[body_parts.index('leg1')], -1, 0)
+            c.move(cat[body_parts.index('leg2')], 1, 0)
+        else:
+            c.move(cat[body_parts.index('leg1')], 1, 0)
+            c.move(cat[body_parts.index('leg2')], -1, 0)
+
+        if step > 10:
+            flag_step = True
+        elif step < -10:
+            flag_step = False
+        if flag_step is False:
+            step += 1
+        else:
+            step -= 1
     root.after(30, running_cat)
 
-def jumping_cat():
-    pass
+
+def return_flag_jump():
+    global flag_jump
+    flag_jump = 1
+
+
+def jumping_cat(event):
+    global flag_jump, djump
+    print(flag_jump)
+    flag_jump += 1
+    if flag_jump == 2:
+        flag_jump += 1
+        for i in range(10):
+            root.after(10 * i, return_body_move(0, 10 * dx))
+        for i in range(10):
+            root.after(100 + 10 * i, return_body_move(0, -10 * dx))
+        for i in range(40):
+            if i < 21:
+                root.after(200 + 60 * i, return_full_body_move(0, djump[i]))
+            root.after(200 + 60 * i, return_jumping_rainbow(0, i))
+    root.after(900, return_flag_jump)
+
+
+def return_jumping_rainbow(xh, a):
+    def jumping_rainbow():
+        counter = a
+        xx = xh
+        for j in range(9, -1, -1):
+            counter -= 1
+            if (counter >= 0) and (counter < 21):
+                for i in range(6):
+                    c.move(rainbow_list[j][i], xx, djump[counter])
+
+    return jumping_rainbow
 
 
 rainbow()
 cat_creation(170, 190)
 running_cat()
-root.bind('<SPACE>', jumping_cat)
+
+root.bind('<space>', jumping_cat)
 
 root.mainloop()
