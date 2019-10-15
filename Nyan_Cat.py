@@ -158,7 +158,7 @@ def jumping_cat(event):
             if i < 21:
                 root.after(200 + 60 * i, return_full_body_move(0, djump[i]))
             root.after(200 + 60 * i, return_jumping_rainbow(0, i))
-    root.after(900, return_flag_jump)
+        root.after(1500, return_flag_jump)
 
 
 def return_jumping_rainbow(xh, a):
