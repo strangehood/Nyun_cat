@@ -1,11 +1,11 @@
 from tkinter import *
-import time as t
+import random as r
 
 root = Tk()
 
-root.geometry('800x600')
+root.geometry('800x700')
 
-c = Canvas(root, bg='white')
+c = Canvas(root, bg='azure')
 c.pack(fill=BOTH, expand=1)
 
 color = ('indian red', 'orange', 'yellow', 'pale green', 'RoyalBlue1', 'MediumPurple')
@@ -172,6 +172,47 @@ def return_jumping_rainbow(xh, a):
                     c.move(rainbow_list[j][i], xx, djump[counter])
 
     return jumping_rainbow
+
+cloud_number = None
+cloud_list = []  # list of clouds characteristics
+cloud_color = ['snow', 'ghost white', 'white smoke', 'gainsboro', 'floral white', 'old lace', 'linen', 'antique white',
+               'papaya whip', 'blanched almond', 'bisque', 'peach puff', 'navajo white', 'lemon chiffon', 'mint cream',
+               'azure', 'alice blue', 'lavender', 'lavender blush', 'misty rose', 'dark slate gray', 'dim gray',
+               'slate gray', 'light slate gray', 'gray', 'light grey', 'midnight blue', 'navy', 'cornflower blue',
+               'dark slate blue', 'slate blue', 'medium slate blue', 'light slate blue', 'medium blue', 'royal blue',
+               'blue', 'dodger blue', 'deep sky blue', 'sky blue', 'light sky blue', 'steel blue', 'light steel blue',
+               'light blue', 'powder blue', 'pale turquoise', 'dark turquoise', 'medium turquoise', 'turquoise',
+               'cyan', 'light cyan', 'cadet blue', 'medium aquamarine']
+
+
+def fog_generation():  # func generate cloud_number fog clouds
+    global cloud_number
+    for i in range(cloud_number):
+        # generation of cloud characteristics
+        cloud_speed = r.randint(-5, -1)
+        cloud_length = r.randint(50, 200)
+        cloud_x = r.randint(0, 800)
+        cloud_y = r.randint(360, 600)
+
+        # cloud drawing
+        cloud = c.create_line(cloud_x, cloud_y, cloud_x + cloud_length, cloud_y, fill=r.choice(cloud_color),
+                              width=20)
+        cloud_list.append([cloud, cloud_speed, cloud_length, cloud_y])
+
+
+def fog_animation():  # func animate fog
+    for i in range(cloud_number):
+        c.move(cloud_list[i][0], cloud_list[i][1], 0)
+        if c.coords(cloud_list[i][0])[2] < 0:
+            cloud_y = r.randint(360, 600)
+            c.move(cloud_list[i][0], 800 + cloud_list[i][2], 0)
+
+    root.after(60, fog_animation)
+
+
+cloud_number = 15
+fog_generation()
+root.after(60, fog_animation)
 
 
 rainbow()
