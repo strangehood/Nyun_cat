@@ -4,6 +4,7 @@ import random as r
 root = Tk()
 
 root.geometry('800x700')
+root.resizable(width=False, height=False)
 
 c = Canvas(root, bg='azure')
 c.pack(fill=BOTH, expand=1)
